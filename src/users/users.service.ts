@@ -12,11 +12,13 @@ export class UsersService {
 
     async createUser(dto: CreateUserDto ){
         const user = await this.userReposytory.create(dto)
+        const role = await this.roleService.getRoleByValue('USER')
+        await user.$set('roles', [role.id])
         return user
     }
 
     async getAllusers(){
-        const users = await this.userReposytory.findAll()
+        const users = await this.userReposytory.findAll({include:{all:true}})
         return users
     }
 

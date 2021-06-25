@@ -1,10 +1,12 @@
 import { NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
+import { ppid } from "process"
 import {AppModule} from './app.module'
 
 async function start(){
     const PORT = process.env.PORT || 3000
     const app = await NestFactory.create(AppModule)
+    app.enableCors()
 
 
     const config = new DocumentBuilder()

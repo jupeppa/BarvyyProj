@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -12,6 +12,16 @@ export class AuthService {
                 private jwtService: JwtService){}
 
     async login( userDto: CreateUserDto){
+        const user = await this.validateUser(userDto)
+        return this.generateToken(user)
+    }
+    private async validateUser(userDto: CreateUserDto) {
+        const user = await this.userService.getUserByEmail(userDto.email)
+        const passwordEquals = await bcrypt.compare(userDto.password, user.password)
+        if(user && passwordEquals){
+            return user
+        }
+        throw new UnauthorizedException({message: 'Wrong password or email'})
     }
 
     async registration( userDto: CreateUserDto){
@@ -19,12 +29,12 @@ export class AuthService {
         if(candidate){
             throw new HttpException('There is already a user with this email', HttpStatus.BAD_REQUEST)
         }
-            const hashPassword = await bcrypt.hash(userDto, 5)
+            const hashPassword = await bcrypt.hash(userDto.password, 5)
             const user = await this.userService.createUser({...userDto, password: hashPassword})
             return this.generateToken(user)
     }
 
-    async generateToken(user: User){
+    private async generateToken(user: User){
         const payload = {email: user.email, id: user.id, roles: user.roles}
         return{
             token: this.jwtService.sign(payload)

@@ -7,6 +7,8 @@ async function start(){
     const PORT = process.env.PORT || 3000
     const app = await NestFactory.create(AppModule)
     app.enableCors()
+    console.log(123213,process.env.POSTGRES_PASSWORD, typeof process.env.POSTGRES_PASSWORD);
+    
 
 
     const config = new DocumentBuilder()

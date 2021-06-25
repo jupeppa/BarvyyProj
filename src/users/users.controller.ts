@@ -5,7 +5,7 @@ import { User } from './users.model';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
-@Controller('/')
+@Controller('users')
 export class UsersController {
 
     constructor(private UsersService: UsersService){}

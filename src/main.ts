@@ -12,10 +12,10 @@ async function start(){
 
 
     const config = new DocumentBuilder()
-        .setTitle('Online burger restraunt')
-        .setDescription('')
+        .setTitle('Barvyy Parties')
+        .setDescription('Bying tickets for parties')
         .setVersion('1.0.0')
-        .addTag('Online restraunt')
+        .addTag('BARVYY')
         .build()
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('/api/docs', app, document);
